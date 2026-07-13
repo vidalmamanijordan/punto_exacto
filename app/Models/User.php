@@ -27,4 +27,9 @@ class User extends Authenticatable implements PasskeyUser
             'is_active' => 'boolean',
         ];
     }
+
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
 }

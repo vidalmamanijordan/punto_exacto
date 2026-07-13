@@ -30,6 +30,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/users', function () {
         return inertia('Users/Index');
     })->middleware('permission:user.view')->name('users.index');
+
+    Route::get('/ratings', function () {
+        return inertia('Ratings/Index');
+    })->middleware('permission:ratings.view')->name('ratings.index');
 });
 
 require __DIR__ . '/settings.php';

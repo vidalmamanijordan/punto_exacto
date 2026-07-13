@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             PlaceSeeder::class,
             FaqSeeder::class,
+            RatingSeeder::class,
         ]);
     }
 }

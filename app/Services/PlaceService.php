@@ -11,9 +11,7 @@ class PlaceService
         return Place::with([
             'campus',
             'category',
-        ])
-            ->latest()
-            ->get();
+        ])->latest()->get();
     }
 
     public function create(array $data)

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid, Layers, Building2, MapPinned, CircleHelp, Shield, Users } from '@lucide/vue';
+import { BookOpen, FolderGit2, LayoutGrid, Layers, Building2, MapPinned, CircleHelp, Shield, Users, Star } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -21,6 +21,7 @@ import { index as placesIndex } from '@/routes/places';
 import { index as faqsIndex } from '@/routes/faqs';
 import { index as rolesIndex } from '@/routes/roles';
 import { index as usersIndex } from '@/routes/users';
+import { index as ratingsIndex } from '@/routes/ratings';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -58,6 +59,11 @@ const mainNavItems: NavItem[] = [
         title: 'Users',
         href: usersIndex(),
         icon: Users,
+    },
+    {
+        title: 'Ratings',
+        href: ratingsIndex(),
+        icon: Star,
     }
 ];
 

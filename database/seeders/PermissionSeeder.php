@@ -47,6 +47,12 @@ class PermissionSeeder extends Seeder
             'role.edit',
             'role.delete',
 
+            // Ratings
+            'ratings.view',
+            'ratings.create',
+            'ratings.edit',
+            'ratings.delete',
+
             // Dashboard
             'dashboard.view',
         ];
