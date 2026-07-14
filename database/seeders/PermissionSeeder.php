@@ -53,6 +53,12 @@ class PermissionSeeder extends Seeder
             'ratings.edit',
             'ratings.delete',
 
+            //favorites
+            'favorites.view',
+            'favorites.create',
+            'favorites.edit',
+            'favorites.delete',
+
             // Dashboard
             'dashboard.view',
         ];

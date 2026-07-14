@@ -34,6 +34,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/ratings', function () {
         return inertia('Ratings/Index');
     })->middleware('permission:ratings.view')->name('ratings.index');
+
+    Route::get('/favorites', function () {
+        return inertia('Favorites/Index');
+    })->middleware('permission:favorites.view')->name('favorites.index');
 });
 
 require __DIR__ . '/settings.php';

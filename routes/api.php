@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\CampusController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FaqController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PlaceController;
 use App\Http\Controllers\Api\RatingController;
@@ -18,5 +19,6 @@ Route::name('api.')->group(function () {
     Route::apiResource('roles', RoleController::class);
     Route::apiResource('users', UserController::class);
     Route::apiResource('ratings', RatingController::class);
+    Route::apiResource('favorites', FavoriteController::class);
     Route::get('/permissions', [PermissionController::class, 'index']);
 });

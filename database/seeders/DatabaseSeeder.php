@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             PlaceSeeder::class,
             FaqSeeder::class,
             RatingSeeder::class,
+            FavoriteSeeder::class,
         ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Place extends Model
 {
@@ -33,5 +34,10 @@ class Place extends Model
     public function ratings()
     {
         return $this->hasMany(Rating::class);
+    }
+
+    public function favorites(): HasMany
+    {
+        return $this->hasMany(Favorite::class);
     }
 }
