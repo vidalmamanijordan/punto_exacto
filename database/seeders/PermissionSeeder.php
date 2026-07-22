@@ -59,6 +59,12 @@ class PermissionSeeder extends Seeder
             'favorites.edit',
             'favorites.delete',
 
+            // Search Histories
+            'search-histories.view',
+            'search-histories.create',
+            'search-histories.edit',
+            'search-histories.delete',
+
             // Dashboard
             'dashboard.view',
         ];

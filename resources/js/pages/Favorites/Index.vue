@@ -180,8 +180,10 @@ onMounted(() => {
 
         <!-- DELETE -->
 
-        <ConfirmDialog :open="showDeleteDialog" title="Eliminar favorito" message="¿Deseas eliminar este favorito?"
-            variant="destructive" confirm-label="Eliminar" :loading="deleteLoading" @close="showDeleteDialog = false"
+        <ConfirmDialog :open="showDeleteDialog" title="Eliminar favorito"
+            :message="`¿Deseas eliminar el favorito '${favoriteToDelete?.place.name}'?`"
+            :loading="deleteLoading" variant="destructive" confirm-label="Eliminar"
+            :confirmation-text="favoriteToDelete?.place.name" @close="showDeleteDialog = false"
             @confirm="deleteFavorite" />
 
     </div>

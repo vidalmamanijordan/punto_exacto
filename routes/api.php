@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PlaceController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\SearchHistoryController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,5 +21,6 @@ Route::name('api.')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('ratings', RatingController::class);
     Route::apiResource('favorites', FavoriteController::class);
+    Route::apiResource('search-histories', SearchHistoryController::class);
     Route::get('/permissions', [PermissionController::class, 'index']);
 });

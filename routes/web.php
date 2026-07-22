@@ -38,6 +38,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/favorites', function () {
         return inertia('Favorites/Index');
     })->middleware('permission:favorites.view')->name('favorites.index');
+
+    Route::get('/search-histories', function () {
+        return inertia('Search-Histories/Index');
+    })->middleware('permission:search-histories.view')->name('search-histories.index');
 });
 
 require __DIR__ . '/settings.php';

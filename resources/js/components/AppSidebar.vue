@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid, Layers, Building2, MapPinned, CircleHelp, Shield, Users, Star } from '@lucide/vue';
+import { BookOpen, FolderGit2, LayoutGrid, Layers, Building2, MapPinned, CircleHelp, Shield, Users, Star, Bookmark, Clock3 } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -22,6 +22,8 @@ import { index as faqsIndex } from '@/routes/faqs';
 import { index as rolesIndex } from '@/routes/roles';
 import { index as usersIndex } from '@/routes/users';
 import { index as ratingsIndex } from '@/routes/ratings';
+import { index as favoritesIndex } from '@/routes/favorites';
+import { index as searchHistoryIndex } from '@/routes/search-histories';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -64,6 +66,16 @@ const mainNavItems: NavItem[] = [
         title: 'Ratings',
         href: ratingsIndex(),
         icon: Star,
+    },
+    {
+        title: 'Favoritos',
+        href: favoritesIndex(),
+        icon: Bookmark,
+    },
+    {
+        title: 'Historial de Búsqueda',
+        href: searchHistoryIndex(),
+        icon: Clock3,
     }
 ];
 

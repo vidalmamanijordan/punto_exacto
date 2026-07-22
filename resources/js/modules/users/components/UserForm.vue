@@ -32,37 +32,24 @@ const selectedRoleId = computed({
         <!-- Nombre -->
         <div class="space-y-1.5">
             <Label for="user-name">Nombre</Label>
-            <Input
-                id="user-name"
-                v-model="form.name"
-                placeholder="Ingrese el nombre completo"
-                :aria-invalid="!!errors.name"
-            />
+            <Input id="user-name" v-model="form.name" placeholder="Ingrese el nombre completo"
+                :aria-invalid="!!errors.name" />
             <p v-if="errors.name" class="text-xs text-destructive">{{ errors.name }}</p>
         </div>
 
         <!-- Email -->
         <div class="space-y-1.5">
             <Label for="user-email">Correo electrónico</Label>
-            <Input
-                id="user-email"
-                v-model="form.email"
-                type="email"
-                placeholder="correo@ejemplo.com"
-                :aria-invalid="!!errors.email"
-            />
+            <Input id="user-email" v-model="form.email" type="email" placeholder="correo@ejemplo.com"
+                :aria-invalid="!!errors.email" />
             <p v-if="errors.email" class="text-xs text-destructive">{{ errors.email }}</p>
         </div>
 
         <!-- Rol -->
         <div class="space-y-1.5">
             <Label>Rol</Label>
-            <AppCombobox
-                v-model="selectedRoleId"
-                :options="roles"
-                placeholder="Buscar rol..."
-                empty-text="No se encontraron roles"
-            />
+            <AppCombobox v-model="selectedRoleId" :options="roles" placeholder="Buscar rol..."
+                empty-text="No se encontraron roles" />
             <p v-if="errors.role" class="text-xs text-destructive">{{ errors.role }}</p>
         </div>
 
@@ -70,35 +57,23 @@ const selectedRoleId = computed({
         <div v-if="!isEditing" class="grid grid-cols-2 gap-4">
             <div class="space-y-1.5">
                 <Label for="user-password">Contraseña</Label>
-                <Input
-                    id="user-password"
-                    v-model="form.password"
-                    type="password"
-                    :aria-invalid="!!errors.password"
-                />
+                <Input id="user-password" v-model="form.password" type="password" :aria-invalid="!!errors.password" />
                 <p v-if="errors.password" class="text-xs text-destructive">{{ errors.password }}</p>
             </div>
 
             <div class="space-y-1.5">
                 <Label for="user-password-confirmation">Confirmar contraseña</Label>
-                <Input
-                    id="user-password-confirmation"
-                    v-model="form.password_confirmation"
-                    type="password"
-                    :aria-invalid="!!errors.password_confirmation"
-                />
-                <p v-if="errors.password_confirmation" class="text-xs text-destructive">{{ errors.password_confirmation }}</p>
+                <Input id="user-password-confirmation" v-model="form.password_confirmation" type="password"
+                    :aria-invalid="!!errors.password_confirmation" />
+                <p v-if="errors.password_confirmation" class="text-xs text-destructive">{{ errors.password_confirmation
+                    }}</p>
             </div>
         </div>
 
         <!-- Estado -->
         <div class="flex items-center gap-3 rounded-lg border border-slate-100 bg-slate-50/60 px-4 py-3">
-            <input
-                id="is_active"
-                v-model="form.is_active"
-                type="checkbox"
-                class="h-4 w-4 rounded border-slate-300 accent-slate-900"
-            />
+            <input id="is_active" v-model="form.is_active" type="checkbox"
+                class="h-4 w-4 rounded border-slate-300 accent-slate-900" />
             <div>
                 <label for="is_active" class="cursor-pointer text-sm font-medium text-slate-700">
                     Usuario activo

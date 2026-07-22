@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreFavoriteRequest;
 use App\Http\Requests\UpdateFavoriteRequest;
 use App\Http\Resources\FavoriteResource;
 use App\Models\Favorite;
 use App\Services\FavoriteService;
-use Illuminate\Http\Request;
 
 class FavoriteController extends Controller
 {
@@ -22,7 +22,7 @@ class FavoriteController extends Controller
         );
     }
 
-    public function store(Request $request)
+    public function store(StoreFavoriteRequest $request)
     {
         $favorite = $this->service->create(
             $request->validated()

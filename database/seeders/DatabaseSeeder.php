@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             FaqSeeder::class,
             RatingSeeder::class,
             FavoriteSeeder::class,
+            SearchHistorySeeder::class,
         ]);
     }
 }

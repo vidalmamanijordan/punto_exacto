@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AppCombobox from '@/components/shared/AppCombobox.vue';
+import { Label } from '@/components/ui/label';
 import type { User } from '../types/user';
 import type { Place } from '../types/place';
 
@@ -19,58 +21,35 @@ defineProps<{
 </script>
 
 <template>
-    <div class="space-y-5">
+    <div class="space-y-4">
 
         <!-- Usuario -->
-        <div>
-            <label class="mb-1 block text-sm font-medium text-slate-700">
-                Usuario
-            </label>
-
-            <select v-model="form.user_id"
-                class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm transition focus:border-slate-400 focus:outline-none">
-                <option :value="null">
-                    Seleccione un usuario
-                </option>
-
-                <option v-for="user in users" :key="user.id" :value="user.id">
-                    {{ user.name }}
-                </option>
-            </select>
-
-            <p v-if="errors.user_id" class="mt-1 text-xs text-red-500">
-                {{ errors.user_id }}
-            </p>
+        <div class="space-y-1.5">
+            <Label>Usuario</Label>
+            <AppCombobox
+                v-model="form.user_id"
+                :options="users"
+                placeholder="Buscar usuario..."
+                empty-text="No se encontraron usuarios"
+            />
+            <p v-if="errors.user_id" class="text-xs text-destructive">{{ errors.user_id }}</p>
         </div>
 
         <!-- Lugar -->
-        <div>
-            <label class="mb-1 block text-sm font-medium text-slate-700">
-                Lugar
-            </label>
-
-            <select v-model="form.place_id"
-                class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm transition focus:border-slate-400 focus:outline-none">
-                <option :value="null">
-                    Seleccione un lugar
-                </option>
-
-                <option v-for="place in places" :key="place.id" :value="place.id">
-                    {{ place.name }}
-                </option>
-            </select>
-
-            <p v-if="errors.place_id" class="mt-1 text-xs text-red-500">
-                {{ errors.place_id }}
-            </p>
+        <div class="space-y-1.5">
+            <Label>Lugar</Label>
+            <AppCombobox
+                v-model="form.place_id"
+                :options="places"
+                placeholder="Buscar lugar..."
+                empty-text="No se encontraron lugares"
+            />
+            <p v-if="errors.place_id" class="text-xs text-destructive">{{ errors.place_id }}</p>
         </div>
 
         <!-- Calificación -->
-        <div>
-            <label class="mb-1 block text-sm font-medium text-slate-700">
-                Calificación
-            </label>
-
+        <div class="space-y-1.5">
+            <Label>Calificación</Label>
             <select v-model="form.rating"
                 class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm transition focus:border-slate-400 focus:outline-none">
                 <option :value="1">⭐ 1</option>
@@ -79,24 +58,15 @@ defineProps<{
                 <option :value="4">⭐⭐⭐⭐ 4</option>
                 <option :value="5">⭐⭐⭐⭐⭐ 5</option>
             </select>
-
-            <p v-if="errors.rating" class="mt-1 text-xs text-red-500">
-                {{ errors.rating }}
-            </p>
+            <p v-if="errors.rating" class="text-xs text-destructive">{{ errors.rating }}</p>
         </div>
 
         <!-- Comentario -->
-        <div>
-            <label class="mb-1 block text-sm font-medium text-slate-700">
-                Comentario
-            </label>
-
+        <div class="space-y-1.5">
+            <Label>Comentario</Label>
             <textarea v-model="form.comment" rows="4" placeholder="Escriba un comentario..."
                 class="w-full resize-none rounded-lg border border-slate-200 px-3 py-2 text-sm transition focus:border-slate-400 focus:outline-none" />
-
-            <p v-if="errors.comment" class="mt-1 text-xs text-red-500">
-                {{ errors.comment }}
-            </p>
+            <p v-if="errors.comment" class="text-xs text-destructive">{{ errors.comment }}</p>
         </div>
 
     </div>

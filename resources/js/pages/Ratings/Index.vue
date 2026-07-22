@@ -39,14 +39,11 @@ const loadRatings = async () => {
 // =====================
 
 const showModal = ref(false);
-
 const selectedRating = ref<Rating | null>(null);
-
 const openCreate = () => {
     selectedRating.value = null;
     showModal.value = true;
 };
-
 const openEdit = (rating: Rating) => {
     selectedRating.value = rating;
     showModal.value = true;
@@ -57,16 +54,12 @@ const openEdit = (rating: Rating) => {
 // =====================
 
 const showDeleteDialog = ref(false);
-
 const ratingToDelete = ref<Rating | null>(null);
-
 const deleteLoading = ref(false);
-
 const openDelete = (rating: Rating) => {
     ratingToDelete.value = rating;
     showDeleteDialog.value = true;
 };
-
 const deleteRating = async () => {
 
     if (!ratingToDelete.value) return;
@@ -105,7 +98,6 @@ const deleteRating = async () => {
 // =====================
 // CALLBACK
 // =====================
-
 const onSaved = async () => {
     await loadRatings();
 };
