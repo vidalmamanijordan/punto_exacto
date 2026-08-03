@@ -5,7 +5,11 @@ use Illuminate\Support\Facades\Route;
 Route::inertia('/', 'Welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->middleware('permission:dashboard.view')->name('dashboard');
+    Route::get('/dashboard', function () {
+        return inertia('Dashboard/Index');
+    })
+        ->middleware('permission:dashboard.view')
+        ->name('dashboard');
 
     Route::get('/categories', function () {
         return inertia('Categories/Index');
