@@ -8,12 +8,10 @@ export interface DashboardStatistics {
     total_favorites: number;
     total_search_histories: number;
 }
-
 export interface DashboardUser {
     id: number;
     name: string;
 }
-
 export interface DashboardPlace {
     id: number;
     name: string;
@@ -26,7 +24,6 @@ export interface DashboardSearchHistory {
     user: DashboardUser;
     place: DashboardPlace;
 }
-
 export interface DashboardRating {
     id: number;
     rating: number;
@@ -35,7 +32,6 @@ export interface DashboardRating {
     user: DashboardUser;
     place: DashboardPlace;
 }
-
 export interface DashboardFavorite {
     id: number;
     created_at: string;
@@ -43,9 +39,55 @@ export interface DashboardFavorite {
     place: DashboardPlace;
 }
 
+/*
+|--------------------------------------------------------------------------
+| Rankings
+|--------------------------------------------------------------------------
+*/
+export interface DashboardTopSearchedPlace {
+    place_id: number;
+    total: number;
+    place: DashboardPlace;
+}
+export interface DashboardTopFavoritePlace {
+    place_id: number;
+    total: number;
+    place: DashboardPlace;
+}
+export interface DashboardTopRatedPlace {
+    place_id: number;
+    average_rating: number;
+    total_ratings: number;
+    place: DashboardPlace;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Campus
+|--------------------------------------------------------------------------
+*/
+export interface DashboardCampusStatistics {
+    id: number;
+    name: string;
+    code: string;
+    places: number;
+    favorites: number;
+    ratings: number;
+    searches: number;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Dashboard
+|--------------------------------------------------------------------------
+*/
 export interface DashboardData {
     statistics: DashboardStatistics;
     recent_search_histories: DashboardSearchHistory[];
     recent_ratings: DashboardRating[];
     recent_favorites: DashboardFavorite[];
+    top_searched_places: DashboardTopSearchedPlace[];
+    top_favorite_places: DashboardTopFavoritePlace[];
+    top_rated_places: DashboardTopRatedPlace[];
+    campus_statistics: DashboardCampusStatistics[];
 }

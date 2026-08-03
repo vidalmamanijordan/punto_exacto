@@ -14,7 +14,7 @@ use App\Models\User;
 class DashboardService
 {
     /**
-     * Obtiene todas las estadísticas generales del Dashboard.
+     * Obtiene las estadísticas generales del Dashboard.
      */
     public function getStatistics(): array
     {
@@ -45,7 +45,7 @@ class DashboardService
     }
 
     /**
-     * Últimas valoraciones.
+     * Últimas valoraciones realizadas.
      */
     public function getRecentRatings(int $limit = 10)
     {
@@ -59,7 +59,7 @@ class DashboardService
     }
 
     /**
-     * Últimos favoritos.
+     * Últimos favoritos agregados.
      */
     public function getRecentFavorites(int $limit = 10)
     {
@@ -70,5 +70,80 @@ class DashboardService
             ->latest()
             ->take($limit)
             ->get();
+    }
+
+    /**
+     * Lugares más buscados.
+     */
+    public function getTopSearchedPlaces(int $limit = 5)
+    {
+        return SearchHistory::selectRaw('
+                place_id,
+                COUNT(*) as total
+            ')
+            ->with('place')
+            ->groupBy('place_id')
+            ->orderByDesc('total')
+            ->take($limit)
+            ->get();
+    }
+
+    /**
+     * Lugares agregados más veces a favoritos.
+     */
+    public function getTopFavoritePlaces(int $limit = 5)
+    {
+        return Favorite::selectRaw('
+                place_id,
+                COUNT(*) as total
+            ')
+            ->with('place')
+            ->groupBy('place_id')
+            ->orderByDesc('total')
+            ->take($limit)
+            ->get();
+    }
+
+    /**
+     * Lugares mejor valorados.
+     */
+    public function getTopRatedPlaces(int $limit = 5)
+    {
+        return Rating::selectRaw('
+                place_id,
+                ROUND(AVG(rating),2) as average_rating,
+                COUNT(*) as total_ratings
+            ')
+            ->with('place')
+            ->groupBy('place_id')
+            ->havingRaw('COUNT(*) > 0')
+            ->orderByDesc('average_rating')
+            ->take($limit)
+            ->get();
+    }
+
+    /**
+     * Estadísticas por campus.
+     */
+    public function getCampusStatistics()
+    {
+        return Campus::withCount([
+            'places',
+        ])
+            ->get()
+            ->map(function ($campus) {
+
+                $placeIds = Place::where('campus_id', $campus->id)->pluck('id');
+
+                return [
+                    'id' => $campus->id,
+                    'name' => $campus->name,
+                    'code' => $campus->code,
+                    'places' => $campus->places_count,
+                    'favorites' => Favorite::whereIn('place_id', $placeIds)->count(),
+                    'ratings' => Rating::whereIn('place_id', $placeIds)->count(),
+                    'searches' => SearchHistory::whereIn('place_id', $placeIds)->count(),
+                ];
+            });
     }
 }
