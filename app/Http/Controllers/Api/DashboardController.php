@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\DashboardService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -15,38 +16,68 @@ class DashboardController extends Controller
     /**
      * Obtiene toda la información del Dashboard.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $period = $request->input('period', 30);
+
+        $filters = [
+            'period' => is_numeric($period) ? (int) $period : 30,
+            'campus' => $request->input('campus'),
+            'category' => $request->input('category'),
+        ];
+
         return response()->json([
 
             /*
             |--------------------------------------------------------------------------
-            | Estadísticas generales
+            | Summary
             |--------------------------------------------------------------------------
             */
-            'statistics' => $this->service->getStatistics(),
+
+            'summary' => [
+                'statistics' => $this->service->getStatistics($filters),
+                'recent_search_histories' => $this->service->getRecentSearchHistories($filters),
+                'recent_ratings' => $this->service->getRecentRatings($filters),
+                'recent_favorites' => $this->service->getRecentFavorites($filters),
+            ],
+
             /*
             |--------------------------------------------------------------------------
-            | Actividad reciente
+            | Reports
             |--------------------------------------------------------------------------
             */
-            'recent_search_histories' => $this->service->getRecentSearchHistories(),
-            'recent_ratings' => $this->service->getRecentRatings(),
-            'recent_favorites' => $this->service->getRecentFavorites(),
+
+            'reports' => $this->service->getReports($filters),
+
             /*
             |--------------------------------------------------------------------------
             | Rankings
             |--------------------------------------------------------------------------
             */
-            'top_searched_places' => $this->service->getTopSearchedPlaces(),
-            'top_favorite_places' => $this->service->getTopFavoritePlaces(),
-            'top_rated_places' => $this->service->getTopRatedPlaces(),
+
+            'rankings' => [
+                'top_searched_places' => $this->service->getTopSearchedPlaces($filters),
+                'top_favorite_places' => $this->service->getTopFavoritePlaces($filters),
+                'top_rated_places' => $this->service->getTopRatedPlaces($filters),
+            ],
+
             /*
             |--------------------------------------------------------------------------
-            | Estadísticas por Campus
+            | Campus
             |--------------------------------------------------------------------------
             */
-            'campus_statistics' => $this->service->getCampusStatistics(),
+
+            'campus' => [
+                'statistics' => $this->service->getCampusStatistics($filters),
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Filters
+            |--------------------------------------------------------------------------
+            */
+
+            'filters' => $this->service->getFilters(),
         ]);
     }
 }

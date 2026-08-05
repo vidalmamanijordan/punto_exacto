@@ -6,6 +6,7 @@ import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { initializeFlashToast } from '@/lib/flashToast';
 import HeadlessUI from '@/plugins/headlessui';
 import { toast } from 'vue-sonner';
+import VueApexCharts from 'vue3-apexcharts';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -13,6 +14,7 @@ createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     withApp(app) {
         app.use(HeadlessUI).provide('toast', toast);
+        app.component('ApexChart', VueApexCharts);
     },
     layout: (name) => {
         switch (true) {
