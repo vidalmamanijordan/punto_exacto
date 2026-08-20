@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid, Layers, Building2, MapPinned, CircleHelp, Shield, Users, Star, Bookmark, Clock3 } from '@lucide/vue';
+import { BookOpen, FolderGit2, LayoutGrid, Layers, Building2, MapPinned, CircleHelp, Shield, Users, Star, Bookmark, Clock3, Brain } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -24,6 +24,8 @@ import { index as usersIndex } from '@/routes/users';
 import { index as ratingsIndex } from '@/routes/ratings';
 import { index as favoritesIndex } from '@/routes/favorites';
 import { index as searchHistoryIndex } from '@/routes/search-histories';
+import { index as knowledgeBaseIndex } from '@/routes/knowledge-base';
+
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -76,6 +78,11 @@ const mainNavItems: NavItem[] = [
         title: 'Historial de Búsqueda',
         href: searchHistoryIndex(),
         icon: Clock3,
+    },
+    {
+        title: 'Base de conocimiento',
+        href: knowledgeBaseIndex(),
+        icon: Brain,
     }
 ];
 

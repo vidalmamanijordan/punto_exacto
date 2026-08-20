@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\FaqController;
 use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\KnowledgeBaseController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PlaceController;
 use App\Http\Controllers\Api\RatingController;
@@ -24,5 +25,12 @@ Route::name('api.')->group(function () {
     Route::apiResource('ratings', RatingController::class);
     Route::apiResource('favorites', FavoriteController::class);
     Route::apiResource('search-histories', SearchHistoryController::class);
+    Route::apiResource('knowledge-base', KnowledgeBaseController::class);
+    Route::get('knowledge-base-active', [KnowledgeBaseController::class, 'active'])
+        ->name('knowledge-base.active');
+    Route::patch('knowledge-base/{knowledgeBase}/activate', [KnowledgeBaseController::class, 'activate'])
+        ->name('knowledge-base.activate');
+    Route::patch('knowledge-base/{knowledgeBase}/deactivate', [KnowledgeBaseController::class, 'deactivate'])
+        ->name('knowledge-base.deactivate');
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');;
 });

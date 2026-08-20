@@ -35,6 +35,12 @@ class PermissionSeeder extends Seeder
             'faq.edit',
             'faq.delete',
 
+            // Knowledge Base
+            'knowledge-base.view',
+            'knowledge-base.create',
+            'knowledge-base.edit',
+            'knowledge-base.delete',
+
             // Users
             'user.view',
             'user.create',

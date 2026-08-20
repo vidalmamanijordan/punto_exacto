@@ -27,6 +27,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return inertia('Faqs/Index');
     })->middleware('permission:faq.view')->name('faqs.index');
 
+    Route::get('/knowledge-base', function () {
+        return inertia('Knowledge-Base/Index');
+    })->middleware('permission:knowledge-base.view')->name('knowledge-base.index');
+
     Route::get('/roles', function () {
         return inertia('Roles/Index');
     })->middleware('permission:role.view')->name('roles.index');
