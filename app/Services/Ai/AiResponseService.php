@@ -43,14 +43,15 @@ class AiResponseService
         | Lugar principal
         |--------------------------------------------------------------------------
         |
-        | Solamente utilizamos un lugar principal cuando la intención
-        | corresponde a una búsqueda de lugares.
+        | Se muestra siempre que exista un lugar entre los resultados,
+        | sin importar cuál fue la intención detectada. Esto es necesario
+        | porque el fallback en cascada puede traer un lugar como respaldo
+        | aunque la intención original haya sido 'faq' o 'institutional_information'.
         |
         */
 
         $place = $this->getMainPlace(
-            $places,
-            $intent
+            $places
         );
 
         /*
@@ -88,17 +89,12 @@ class AiResponseService
     /**
      * Obtiene el lugar principal de la respuesta.
      *
-     * Un lugar solamente se considera principal cuando
-     * la intención detectada es find_place.
+     * Se devuelve siempre que haya un lugar entre los resultados,
+     * sin depender de la intención detectada.
      */
     protected function getMainPlace(
-        Collection $places,
-        string $intent
+        Collection $places
     ): mixed {
-        if ($intent !== 'find_place') {
-            return null;
-        }
-
         $place = $places->first();
 
         if ($place) {
@@ -110,6 +106,11 @@ class AiResponseService
 
     /**
      * Genera el mensaje que verá el usuario.
+     *
+     * Primero intenta usar la fuente asociada a la intención detectada.
+     * Si esa fuente vino vacía (por ejemplo, porque el resultado
+     * disponible llegó gracias al fallback en cascada), recurre
+     * al mensaje de respaldo basado en lo que sí esté disponible.
      */
     protected function generateMessage(
         Collection $faqs,
@@ -123,7 +124,7 @@ class AiResponseService
         |--------------------------------------------------------------------------
         */
 
-        if ($intent === 'find_place') {
+        if ($intent === 'find_place' && $places->isNotEmpty()) {
             return $this->generatePlaceMessage(
                 $places
             );
@@ -135,7 +136,7 @@ class AiResponseService
         |--------------------------------------------------------------------------
         */
 
-        if ($intent === 'faq') {
+        if ($intent === 'faq' && $faqs->isNotEmpty()) {
             return $this->generateFaqMessage(
                 $faqs
             );
@@ -147,7 +148,7 @@ class AiResponseService
         |--------------------------------------------------------------------------
         */
 
-        if ($intent === 'institutional_information') {
+        if ($intent === 'institutional_information' && $knowledgeBase->isNotEmpty()) {
             return $this->generateKnowledgeMessage(
                 $knowledgeBase
             );
@@ -155,10 +156,13 @@ class AiResponseService
 
         /*
         |--------------------------------------------------------------------------
-        | Intent desconocido
+        | Respaldo
         |--------------------------------------------------------------------------
         |
-        | Utilizamos una respuesta de respaldo.
+        | Cubre dos casos:
+        | 1. Intent desconocido ('general').
+        | 2. La fuente esperada por el intent vino vacía, pero el fallback
+        |    en cascada encontró algo en otra fuente.
         |
         */
 
@@ -233,6 +237,9 @@ class AiResponseService
 
     /**
      * Genera una respuesta de respaldo.
+     *
+     * Prioriza FAQ, luego Knowledge Base, luego Place —
+     * usando lo primero que tenga contenido disponible.
      */
     protected function generateFallbackMessage(
         Collection $faqs,

@@ -108,13 +108,18 @@ class AiChatService
     /**
      * Decide qué fuente de información debe consultarse
      * según la intención detectada.
+     *
+     * Si la búsqueda dirigida por intención no encuentra nada,
+     * se aplica un fallback en cascada buscando en todas
+     * las fuentes disponibles.
      */
     protected function searchByIntent(
         string $intent,
         array $terms,
         ?int $campusId = null
     ): array {
-        return match ($intent) {
+
+        $results = match ($intent) {
 
             'find_place' => $this->searchForPlace(
                 $terms,
@@ -134,6 +139,39 @@ class AiChatService
                 $campusId
             ),
         };
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fallback en cascada
+        |--------------------------------------------------------------------------
+        |
+        | Si la búsqueda dirigida por intención no encontró nada,
+        | ampliamos la búsqueda a todas las fuentes antes de rendirnos.
+        |
+        */
+
+        if (
+            $intent !== 'general' &&
+            $this->isEmptyResult($results)
+        ) {
+            $results = $this->searchDefault(
+                $terms,
+                $campusId
+            );
+        }
+
+        return $results;
+    }
+
+    /**
+     * Determina si un conjunto de resultados de búsqueda
+     * está completamente vacío (sin places, faqs ni knowledge base).
+     */
+    protected function isEmptyResult(array $results): bool
+    {
+        return $results['faqs']->isEmpty()
+            && $results['knowledge_base']->isEmpty()
+            && $results['places']->isEmpty();
     }
 
     /**
@@ -226,7 +264,7 @@ class AiChatService
             'message' => 'Por favor, escribe una consulta más específica.',
 
             'data' => [
-                'places' => [],
+                'place' => null,
                 'faqs' => [],
                 'knowledge_base' => [],
                 'intent' => $intent,
