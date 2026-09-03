@@ -9,107 +9,75 @@ class AiIntentDetectorService
     /**
      * Detecta la intención principal de una consulta.
      *
-     * Actualmente trabaja sin IA externa.
-     * La clasificación se realiza mediante reglas.
+     * Sistema de puntaje: cuenta cuántas palabras clave de cada
+     * categoría aparecen en el mensaje y elige la de mayor puntaje.
+     * En caso de empate, prioriza find_place > faq > institutional_information
+     * (el orden en que se definen en el array $scores).
      */
     public function detect(string $message): string
     {
         $message = $this->normalize($message);
 
-        /*
-        |--------------------------------------------------------------------------
-        | 1. Buscar un lugar
-        |--------------------------------------------------------------------------
-        */
+        $scores = [
+            'find_place' => $this->countMatches($message, $this->findPlacePatterns()),
+            'faq' => $this->countMatches($message, $this->faqPatterns()),
+            'institutional_information' => $this->countMatches($message, $this->institutionalInformationPatterns()),
+        ];
 
-        if ($this->isFindPlaceIntent($message)) {
-            return 'find_place';
-        }
+        arsort($scores);
 
-        /*
-        |--------------------------------------------------------------------------
-        | 2. Preguntas frecuentes
-        |--------------------------------------------------------------------------
-        */
+        $topIntent = array_key_first($scores);
 
-        if ($this->isFaqIntent($message)) {
-            return 'faq';
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | 3. Información institucional
-        |--------------------------------------------------------------------------
-        */
-
-        if ($this->isInstitutionalInformationIntent($message)) {
-            return 'institutional_information';
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | 4. Intención general
-        |--------------------------------------------------------------------------
-        */
-
-        return 'general';
+        return $scores[$topIntent] > 0 ? $topIntent : 'general';
     }
 
     /**
-     * Determina si la consulta corresponde a una búsqueda de lugar.
+     * Palabras clave asociadas a la búsqueda de un lugar.
+     *
+     * Se usan raíces (stems) en vez de formas completas cuando es posible,
+     * para evitar contar dos veces la misma idea (ej. 'ubica' cubre
+     * 'ubicacion', 'ubicado' y 'ubicada' en una sola coincidencia).
      */
-    protected function isFindPlaceIntent(string $message): bool
+    protected function findPlacePatterns(): array
     {
-        return $this->matches($message, [
+        return [
             'donde',
-            'ubicacion',
-            'ubicado',
-            'ubicada',
+            'ubica',
             'encuentra',
             'queda',
             'como llego',
-            'localizo',
-            'localizar',
-        ]);
+            'localiz',
+        ];
     }
 
     /**
-     * Determina si la consulta corresponde a una pregunta frecuente.
+     * Palabras clave asociadas a preguntas frecuentes.
      */
-    protected function isFaqIntent(string $message): bool
+    protected function faqPatterns(): array
     {
-        return $this->matches($message, [
-            'puedo',
-            'puede',
-            'permitido',
-            'permite',
-            'requisito',
-            'requisitos',
+        return [
+            'pued',
+            'permit',
+            'requisit',
             'horario',
-            'horarios',
             'acceso',
-            'ingresar',
-            'entrar',
-        ]);
+            'ingres',
+            'entra',
+        ];
     }
 
     /**
-     * Determina si la consulta corresponde a información institucional.
+     * Palabras clave asociadas a información institucional.
      */
-    protected function isInstitutionalInformationIntent(
-        string $message
-    ): bool {
-        return $this->matches($message, [
+    protected function institutionalInformationPatterns(): array
+    {
+        return [
             'universidad',
-            'servicios',
-            'servicio',
+            'servici',
             'reglamento',
-            'reglamentos',
             'politica',
-            'politicas',
             'informacion',
-            'informacion institucional',
-        ]);
+        ];
     }
 
     /**
@@ -117,57 +85,26 @@ class AiIntentDetectorService
      */
     protected function normalize(string $message): string
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Minúsculas y eliminación de acentos
-        |--------------------------------------------------------------------------
-        */
+        $message = Str::lower(Str::ascii($message));
 
-        $message = Str::lower(
-            Str::ascii($message)
-        );
+        $message = preg_replace('/[^a-z0-9\s]/', ' ', $message);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Eliminar caracteres especiales
-        |--------------------------------------------------------------------------
-        */
-
-        $message = preg_replace(
-            '/[^a-z0-9\s]/',
-            ' ',
-            $message
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | Normalizar espacios
-        |--------------------------------------------------------------------------
-        */
-
-        return trim(
-            preg_replace(
-                '/\s+/',
-                ' ',
-                $message
-            )
-        );
+        return trim(preg_replace('/\s+/', ' ', $message));
     }
 
     /**
-     * Comprueba si la consulta contiene alguno
-     * de los patrones indicados.
+     * Cuenta cuántos patrones de la lista aparecen en el mensaje.
      */
-    protected function matches(
-        string $message,
-        array $patterns
-    ): bool {
+    protected function countMatches(string $message, array $patterns): int
+    {
+        $count = 0;
+
         foreach ($patterns as $pattern) {
             if (str_contains($message, $pattern)) {
-                return true;
+                $count++;
             }
         }
 
-        return false;
+        return $count;
     }
 }
