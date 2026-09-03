@@ -40,4 +40,9 @@ class Place extends Model
     {
         return $this->hasMany(Favorite::class);
     }
+
+    public function searchHistories(): HasMany
+    {
+        return $this->hasMany(SearchHistory::class);
+    }
 }

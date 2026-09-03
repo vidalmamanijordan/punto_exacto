@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AiController;
 use App\Http\Controllers\Api\CampusController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DashboardController;
@@ -33,4 +34,5 @@ Route::name('api.')->group(function () {
     Route::patch('knowledge-base/{knowledgeBase}/deactivate', [KnowledgeBaseController::class, 'deactivate'])
         ->name('knowledge-base.deactivate');
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');;
+    Route::post('ai/chat', [AiController::class, 'chat'])->name('ai.chat');
 });
