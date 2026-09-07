@@ -4,15 +4,18 @@ use App\Http\Controllers\Api\AiController;
 use App\Http\Controllers\Api\CampusController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DirectionsController;
 use App\Http\Controllers\Api\FaqController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\KnowledgeBaseController;
+use App\Http\Controllers\Api\PathController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\PlaceController;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SearchHistoryController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\WaypointController;
 use Illuminate\Support\Facades\Route;
 
 Route::name('api.')->group(function () {
@@ -35,4 +38,7 @@ Route::name('api.')->group(function () {
         ->name('knowledge-base.deactivate');
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');;
     Route::post('ai/chat', [AiController::class, 'chat'])->name('ai.chat');
+    Route::post('directions', [DirectionsController::class, 'index'])->name('directions.index');
+    Route::apiResource('waypoints', WaypointController::class);
+    Route::apiResource('paths', PathController::class);
 });

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Place extends Model
@@ -19,6 +20,7 @@ class Place extends Model
         'latitude',
         'longitude',
         'is_active',
+        'waypoint_id'
     ];
 
     public function campus()
@@ -44,5 +46,10 @@ class Place extends Model
     public function searchHistories(): HasMany
     {
         return $this->hasMany(SearchHistory::class);
+    }
+
+    public function waypoint(): BelongsTo
+    {
+        return $this->belongsTo(Waypoint::class);
     }
 }

@@ -50,6 +50,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/search-histories', function () {
         return inertia('Search-Histories/Index');
     })->middleware('permission:search-histories.view')->name('search-histories.index');
+
+    Route::get('/waypoints', function () {
+        return inertia('Waypoints/Editor');
+    })->middleware('permission:waypoint.view')->name('waypoints.index');
 });
 
 require __DIR__ . '/settings.php';

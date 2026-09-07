@@ -71,6 +71,9 @@ class PermissionSeeder extends Seeder
             'search-histories.edit',
             'search-histories.delete',
 
+            // waypoints
+            'waypoint.view',
+
             // Dashboard
             'dashboard.view',
         ];
