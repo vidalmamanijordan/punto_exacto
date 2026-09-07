@@ -40,12 +40,30 @@ interface Path {
   is_active: boolean
 }
 
+interface Place {
+  id: number
+  campus_id: number
+  category_id: number
+  name: string
+  description: string | null
+  building: string | null
+  floor: string | null
+  room: string | null
+  image: string | null
+  latitude: string | null
+  longitude: string | null
+  is_active: boolean
+  waypoint_id: number | null
+}
+
 const campuses = ref<Campus[]>([])
 const selectedCampusId = ref<number | null>(null)
 const loading = ref(true)
 
 const waypoints = ref<Waypoint[]>([])
 const paths = ref<Path[]>([])
+
+const places = ref<Place[]>([])
 
 // Id del waypoint marcado como "origen" mientras el usuario
 // arma una conexión (null = no hay selección activa).
@@ -136,17 +154,21 @@ async function loadGraph() {
   if (!selectedCampusId.value) return
 
   try {
-    const [waypointsRes, pathsRes] = await Promise.all([
+    const [waypointsRes, pathsRes, placesRes] = await Promise.all([
       axios.get('/api/waypoints', {
         params: { campus_id: selectedCampusId.value },
       }),
       axios.get('/api/paths', {
         params: { campus_id: selectedCampusId.value },
       }),
+      axios.get('/api/places', {
+        params: { campus_id: selectedCampusId.value },
+      }),
     ])
 
     waypoints.value = waypointsRes.data.data ?? waypointsRes.data
     paths.value = pathsRes.data.data ?? pathsRes.data
+    places.value = placesRes.data.data ?? placesRes.data
 
     renderGraph()
   } catch (error) {
@@ -198,9 +220,31 @@ function renderGraph() {
  * de eliminar que se conecta después de que el popup se abre.
  */
 function buildWaypointPopup(waypoint: Waypoint): string {
+  const unlinkedPlaces = places.value.filter(
+    (p) =>
+      p.campus_id === waypoint.campus_id &&
+      (p.waypoint_id === null || p.waypoint_id === waypoint.id)
+  )
+
+  const options = unlinkedPlaces
+    .map(
+      (p) =>
+        `<option value="${p.id}" ${p.waypoint_id === waypoint.id ? 'selected' : ''}>${p.name}</option>`
+    )
+    .join('')
+
   return `
-    <div class="text-sm">
+    <div class="text-sm space-y-2">
       <p class="font-medium">${waypoint.name ?? `Waypoint #${waypoint.id}`}</p>
+
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">Vincular como acceso de:</label>
+        <select data-link-place="${waypoint.id}" class="text-xs border rounded p-1 w-full">
+          <option value="">— Ninguno —</option>
+          ${options}
+        </select>
+      </div>
+
       <button
         data-delete-waypoint="${waypoint.id}"
         class="text-red-600 text-xs mt-1 underline"
@@ -240,6 +284,13 @@ function attachPopupHandlers(e: L.PopupEvent) {
     const id = Number(deletePathBtn.getAttribute('data-delete-path'))
     deletePath(id)
   })
+
+  const linkSelect = container.querySelector('[data-link-place]') as HTMLSelectElement | null
+  linkSelect?.addEventListener('change', () => {
+    const waypointId = Number(linkSelect.getAttribute('data-link-place'))
+    const placeId = linkSelect.value ? Number(linkSelect.value) : null
+    linkPlaceToWaypoint(waypointId, placeId)
+  })
 }
 
 async function handleMapClick(latlng: L.LatLng) {
@@ -262,6 +313,57 @@ async function handleMapClick(latlng: L.LatLng) {
   } catch (error) {
     console.error('Error creando waypoint', error)
     alert('No se pudo crear el waypoint.')
+  }
+}
+
+async function linkPlaceToWaypoint(waypointId: number, placeId: number | null) {
+  try {
+    const previousPlace = places.value.find((p) => p.waypoint_id === waypointId)
+
+    if (previousPlace && previousPlace.id !== placeId) {
+      await axios.patch(`/api/places/${previousPlace.id}`, {
+        ...buildPlaceUpdatePayload(previousPlace),
+        waypoint_id: null,
+      })
+    }
+
+    if (placeId !== null) {
+      const place = places.value.find((p) => p.id === placeId)
+      const waypoint = waypoints.value.find((w) => w.id === waypointId)
+
+      if (!place || !waypoint) return
+
+      await axios.patch(`/api/places/${placeId}`, {
+        ...buildPlaceUpdatePayload(place),
+        waypoint_id: waypointId,
+        // Solo autocompleta si el lugar todavía no tenía coordenadas propias,
+        // para no sobreescribir un dato que ya hubieran fijado a mano.
+        latitude: place.latitude ?? waypoint.latitude,
+        longitude: place.longitude ?? waypoint.longitude,
+      })
+    }
+
+    await loadGraph()
+  } catch (error) {
+    console.error('Error vinculando place a waypoint', error)
+    alert('No se pudo vincular el lugar a este waypoint.')
+  }
+}
+
+
+function buildPlaceUpdatePayload(place: Place) {
+  return {
+    campus_id: place.campus_id,
+    category_id: place.category_id,
+    name: place.name,
+    description: place.description,
+    building: place.building,
+    floor: place.floor,
+    room: place.room,
+    image: place.image,
+    is_active: place.is_active,
+    latitude: place.latitude,
+    longitude: place.longitude,
   }
 }
 

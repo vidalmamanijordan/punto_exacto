@@ -72,6 +72,12 @@ class UpdatePlaceRequest extends FormRequest
                 'required',
                 'boolean',
             ],
+
+            'waypoint_id' => [
+                'nullable',
+                'integer',
+                'exists:waypoints,id',
+            ],
         ];
     }
 }

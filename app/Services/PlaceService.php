@@ -6,12 +6,18 @@ use App\Models\Place;
 
 class PlaceService
 {
-    public function getAll()
+    public function getAll(?int $campusId = null)
     {
         return Place::with([
             'campus',
             'category',
-        ])->latest()->get();
+        ])
+            ->when(
+                $campusId !== null,
+                fn($query) => $query->where('campus_id', $campusId)
+            )
+            ->latest()
+            ->get();
     }
 
     public function create(array $data)

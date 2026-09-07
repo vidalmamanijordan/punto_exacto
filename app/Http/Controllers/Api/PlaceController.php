@@ -8,6 +8,7 @@ use App\Http\Requests\UpdatePlaceRequest;
 use App\Http\Resources\PlaceResource;
 use App\Models\Place;
 use App\Services\PlaceService;
+use Laravel\Mcp\Request;
 
 class PlaceController extends Controller
 {
@@ -16,10 +17,12 @@ class PlaceController extends Controller
 
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         return PlaceResource::collection(
-            $this->service->getAll()
+            $this->service->getAll(
+                campusId: $request->integer('campus_id') ?: null
+            )
         );
     }
 
