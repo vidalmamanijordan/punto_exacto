@@ -1,6 +1,20 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid, Layers, Building2, MapPinned, CircleHelp, Shield, Users, Star, Bookmark, Clock3, Brain } from '@lucide/vue';
+import {
+    BookOpen,
+    FolderGit2,
+    LayoutGrid,
+    Layers,
+    Building2,
+    MapPinned,
+    CircleHelp,
+    Shield,
+    Users,
+    Star,
+    Bookmark,
+    Clock3,
+    Brain,
+    Map } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -25,6 +39,7 @@ import { index as ratingsIndex } from '@/routes/ratings';
 import { index as favoritesIndex } from '@/routes/favorites';
 import { index as searchHistoryIndex } from '@/routes/search-histories';
 import { index as knowledgeBaseIndex } from '@/routes/knowledge-base';
+import { index as waypointsIndex } from '@/routes/waypoints';
 
 import type { NavItem } from '@/types';
 
@@ -83,6 +98,11 @@ const mainNavItems: NavItem[] = [
         title: 'Base de conocimiento',
         href: knowledgeBaseIndex(),
         icon: Brain,
+    },
+    {
+        title: 'Puntos de referencia',
+        href: waypointsIndex(),
+        icon: Map,
     }
 ];
 
